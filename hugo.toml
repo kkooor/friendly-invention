@@ -1,0 +1,59 @@
+baseURL = "/"
+title = "My New Blog"
+theme = "loficode"
+
+languageCode = "en-us"
+enableEmoji = true
+
+[outputs]
+  home = ["HTML", "JSON", "pages"]
+  page = ["HTML"]
+  section = ["HTML"]
+
+[outputFormats]
+  [outputFormats.JSON]
+    mediaType = "application/json"
+    baseName = "index"
+    isPlainText = true
+  [outputFormats.pages]
+    mediaType = "application/json"
+    baseName = "pages"
+    isPlainText = true
+
+[pagination]
+  pagerSize = 6
+  path = "page"
+
+[params]
+  description = "A cozy example site showcasing the LofiCode Hugo theme"
+  tagline = "Coding with coffee and lo-fi beats ☕🎵"
+
+  [params.author]
+    name = "LofiCode Dev"
+    image = "images/profile.png"
+
+  [params.social]
+    github = "https://github.com/example"
+    twitter = "https://twitter.com/example"
+
+[[menu.main]]
+  name = "About"
+  url = "/about/"
+  weight = 10
+
+[[menu.main]]
+  name = "Contact"
+  url = "/contact/"
+  weight = 20
+
+[markup]
+  [markup.highlight]
+    style = "dracula"
+    lineNos = true
+    lineNumbersInTable = false
+    tabWidth = 2
+    noClasses = false
+
+[taxonomies]
+  tag = "tags"
+  category = "categories"
