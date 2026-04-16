@@ -1,7 +1,7 @@
 # Linux 常用命令笔记（完整版）
 
 \-\-\-
-title: \&\#34;Linux 常用命令笔记（完整版）\&\#34;
+title: \&\#34;Linux 命令3\&\#34;
 date: 2026\-04\-16
 draft: false          \# 必须为 false 才会发布
 categories: \[\&\#34;技术笔记\&\#34;\]
