@@ -1,15 +1,12 @@
+---
 title: "linux 基础命令2"
 date: 2026-04-16
-draft: false         
+draft: false          # 必须为 false 才会发布
 categories: ["技术笔记"]
 tags: ["Linux", "命令行"]
 author: "kkorcicv"
 toc: true
 ---
-
-这里是正文内容……
-
-本文整理 Linux 中高频使用的文件查找、内容过滤、统计、输出控制类命令，包含详细语法、选项说明、实用示例，适合日常查阅和入门学习。
 
 ## 一、which 命令
 
