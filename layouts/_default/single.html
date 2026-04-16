@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.LanguageCode | default "en" }}">
+<head>
+    {{ partial "fonts.html" . }}
+    {{ partial "darkmode.html" . }}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ .Title }} - {{ .Site.Title }}</title>
+    {{ partial "fonts.html" . }}
+
+    <!-- SEO Meta -->
+    <meta name="description" content="{{ with .Description }}{{ . }}{{ else }}{{ if .IsPage }}{{ .Summary }}{{ else }}{{ with .Site.Params.description }}{{ . }}{{ end }}{{ end }}{{ end }}">
+    <meta name="keywords" content="{{ if .Keywords }}{{ delimit .Keywords ", " }}{{ else if .Params.tags }}{{ delimit .Params.tags ", " }}{{ end }}">
+    <meta name="author" content="{{ with .Params.author }}{{ . }}{{ else }}{{ .Site.Params.author.name }}{{ end }}">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="{{ .Title }}">
+    <meta property="og:description" content="{{ with .Description }}{{ . }}{{ else }}{{ if .IsPage }}{{ .Summary }}{{ else }}{{ with .Site.Params.description }}{{ . }}{{ end }}{{ end }}{{ end }}">
+    <meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}">
+    <meta property="og:url" content="{{ .Permalink }}">
+    <meta property="og:image" content="{{ with .Params.image }}{{ . | absURL }}{{ else }}{{ .Site.Params.ogImage | absURL }}{{ end }}">
+    <meta property="og:site_name" content="{{ .Site.Title }}">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ .Title }}">
+    <meta name="twitter:description" content="{{ with .Description }}{{ . }}{{ else }}{{ if .IsPage }}{{ .Summary }}{{ else }}{{ with .Site.Params.description }}{{ . }}{{ end }}{{ end }}{{ end }}">
+    <meta name="twitter:image" content="{{ with .Params.image }}{{ . | absURL }}{{ else }}{{ .Site.Params.ogImage | absURL }}{{ end }}">
+    {{ with .Site.Params.twitter }}<meta name="twitter:site" content="@{{ . }}">{{ end }}
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ===== 浅色透亮主题 ===== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body {
+            width: 100%;
+            background: linear-gradient(145deg, #f4f9ff 0%, #e3edf5 100%);
+            color: #1e293b;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        body { padding: 40px 20px; min-height: 100vh; }
+
+        /* 导航栏 */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 80px;
+            padding: 0 40px;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: 600;
+            text-decoration: none;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .logo:hover { color: #3b82f6; }
+        .nav-links { display: flex; gap: 30px; align-items: center; }
+        .nav-link {
+            color: #475569;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+        .nav-link:hover, .nav-link.active { color: #3b82f6; }
+        .nav-icons { display: flex; gap: 15px; }
+        .icon-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(59, 130, 246, 0.08);
+            color: #475569;
+            text-decoration: none;
+            transition: all 0.3s;
+            border: 1px solid rgba(59, 130, 246, 0.15);
+            cursor: pointer;
+        }
+        .icon-btn:hover { background: rgba(59, 130, 246, 0.15); color: #3b82f6; }
+
+        /* 主容器 */
+        .container { max-width: 1000px; margin: 0 auto; }
+        .article-header { text-align: center; margin-bottom: 40px; }
+        .article-title { font-size: 48px; font-weight: 300; margin-bottom: 20px; color: #0f172a; }
+        .article-meta { display: flex; justify-content: center; gap: 30px; color: #64748b; font-size: 14px; }
+
+        /* 文章 + 目录两栏 */
+        .article-wrapper { display: flex; gap: 40px; margin-top: 20px; }
+        .article-content {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(12px);
+            border-radius: 20px;
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            line-height: 1.8;
+            box-shadow: 0 8px 20px -6px rgba(0,0,0,0.05);
+        }
+        .article-content h2 {
+            font-size: 28px;
+            margin: 2em 0 1em;
+            color: #0f172a;
+            border-left: 4px solid #3b82f6;
+            padding-left: 20px;
+        }
+        .article-content code {
+            background: #e2e8f0;
+            padding: 2px 6px;
+            border-radius: 6px;
+            color: #1e293b;
+        }
+        .article-content pre {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 12px;
+            overflow-x: auto;
+        }
+
+        /* 图片懒加载样式 */
+        .image-figure {
+            margin: 2em 0;
+            text-align: center;
+        }
+        .image-figure img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .image-figure figcaption {
+            margin-top: 0.5em;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        /* 目录侧边栏 */
+        .article-toc { width: 260px; flex-shrink: 0; }
+        .toc-container {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            border-radius: 20px;
+            padding: 24px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 8px 20px -8px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 40px;
+        }
+        .toc-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .toc-title i { color: #3b82f6; }
+        .toc-content nav > ul { list-style: none; padding-left: 0; }
+        .toc-content li { margin-bottom: 10px; }
+        .toc-content a {
+            color: #475569;
+            text-decoration: none;
+            font-size: 14px;
+            display: block;
+            padding: 6px 0 6px 16px;
+            border-left: 3px solid transparent;
+            transition: 0.2s;
+        }
+        .toc-content a:hover {
+            color: #3b82f6;
+            border-left-color: #93c5fd;
+            background: rgba(59,130,246,0.04);
+        }
+        .toc-content ul ul { padding-left: 16px; }
+        .toc-content ul ul a { font-size: 13px; padding-left: 28px; color: #64748b; }
+
+        .article-footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(59,130,246,0.1);
+            color: #64748b;
+            display: flex;
+            justify-content: space-between;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 100px;
+            padding-top: 40px;
+            border-top: 1px solid rgba(59,130,246,0.15);
+            color: #64748b;
+        }
+        @media (max-width: 768px) {
+            .navbar { flex-direction: column; gap: 20px; }
+            .article-title { font-size: 32px; }
+            .article-wrapper { flex-direction: column; }
+            .article-toc { width: 100%; }
+            .toc-container { position: static; }
+        }
+    </style>
+</head>
+<body><!-- 阅读进度条 -->
+{{ partial "progress.html" . }}
+    <div class="navbar">
+        <a href="{{ .Site.BaseURL }}" class="logo">
+            <i class="fas fa-code"></i>
+            {{ .Site.Title }}
+        </a>
+        <div class="nav-links">
+            {{ $currentPage := . }}
+            {{ range .Site.Menus.main }}
+            <a href="{{ .URL }}" class="nav-link {{ if or ($currentPage.IsMenuCurrent "main" .) ($currentPage.HasMenuCurrent "main" .) }}active{{ end }}">{{ .Name }}</a>
+            {{ end }}
+            <div class="nav-icons">
+                <a href="/posts/#search-input" class="icon-btn" title="去文章列表搜索" onclick="sessionStorage.setItem('focusSearch', 'true')">
+                    <i class="fas fa-search"></i>
+                </a>
+                <a href="{{ .Site.Params.github | default "#" | safeURL }}" class="icon-btn" title="GitHub">
+                    <i class="fab fa-github"></i>
+                </a>
+                <a href="/index.xml" class="icon-btn" title="RSS">
+                    <i class="fas fa-rss"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <header class="article-header">
+            <h1 class="article-title">{{ .Title }}</h1>
+            <div class="article-meta">
+                {{ with .Date }}
+                <span><i class="fas fa-calendar"></i> {{ .Format "2006-01-02" }}</span>
+                {{ end }}
+                {{ with .ReadingTime }}
+                <span><i class="fas fa-clock"></i> {{ . }} min read</span>
+                {{ end }}
+                {{ with .Params.author }}
+                <span><i class="fas fa-user"></i> {{ . }}</span>
+                {{ end }}
+            </div>
+        </header>
+
+        <div class="article-wrapper">
+            <article class="article-content">
+                {{ .Content }}
+                <div class="article-footer">
+                    <!-- 社交分享 -->
+{{ partial "share.html" . }}
+
+<!-- Giscus 评论 -->
+{{ partial "comments.html" . }}
+                    <span>{{ with .Lastmod }}<i class="fas fa-sync-alt"></i> Updated: {{ .Format "2006-01-02" }}{{ end }}</span>
+                    <span>{{ .WordCount }} words</span>
+                </div>
+            </article>
+
+            {{ if .TableOfContents }}
+            <aside class="article-toc">
+                <div class="toc-container">
+                    <div class="toc-title">
+                        <i class="fas fa-list-ul"></i> CONTENTS
+                    </div>
+                    <div class="toc-content">
+                        {{ .TableOfContents }}
+                    </div>
+                </div>
+            </aside>
+            {{ end }}
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>Powered by Hugo | {{ .Site.Title }} © {{ now.Format "2006" }}</p>
+    </div>
+</body>
+</html>

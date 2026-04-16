@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.LanguageCode | default "en" }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ .Title }} - {{ .Site.Title }}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ===== 浅色透亮主题 ===== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body {
+            width: 100%;
+            background: linear-gradient(145deg, #f4f9ff 0%, #e3edf5 100%);
+            color: #1e293b;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        body { padding: 40px 20px; min-height: 100vh; }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 80px;
+            padding: 0 40px;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: 600;
+            text-decoration: none;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .logo:hover { color: #3b82f6; }
+        .nav-links { display: flex; gap: 30px; align-items: center; }
+        .nav-link {
+            color: #475569;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+        .nav-link:hover, .nav-link.active { color: #3b82f6; }
+        .nav-icons { display: flex; gap: 15px; }
+        .icon-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(59, 130, 246, 0.08);
+            color: #475569;
+            text-decoration: none;
+            transition: all 0.3s;
+            border: 1px solid rgba(59, 130, 246, 0.15);
+            cursor: pointer;
+        }
+        .icon-btn:hover { background: rgba(59, 130, 246, 0.15); color: #3b82f6; }
+
+        .container { max-width: 900px; margin: 0 auto; }
+        .page-title {
+            font-size: 3rem;
+            font-weight: 300;
+            margin-bottom: 30px;
+            color: #0f172a;
+        }
+        .page-description {
+            color: #64748b;
+            margin-bottom: 50px;
+            font-size: 1.1rem;
+        }
+
+        /* 归档列表 */
+        .archive-year {
+            margin-bottom: 60px;
+        }
+        .year-heading {
+            font-size: 2.5rem;
+            font-weight: 500;
+            margin-bottom: 25px;
+            color: #0f172a;
+            border-left: 6px solid #3b82f6;
+            padding-left: 20px;
+        }
+        .archive-list {
+            list-style: none;
+        }
+        .archive-item {
+            display: flex;
+            align-items: baseline;
+            margin-bottom: 15px;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(59,130,246,0.1);
+        }
+        .archive-date {
+            width: 100px;
+            color: #64748b;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+        }
+        .archive-title {
+            flex: 1;
+        }
+        .archive-title a {
+            color: #1e293b;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .archive-title a:hover {
+            color: #3b82f6;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 100px;
+            padding-top: 40px;
+            border-top: 1px solid rgba(59,130,246,0.15);
+            color: #64748b;
+        }
+        @media (max-width: 768px) {
+            .navbar { flex-direction: column; gap: 20px; }
+            .archive-item { flex-direction: column; gap: 5px; }
+            .archive-date { width: auto; }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <a href="{{ .Site.BaseURL }}" class="logo">
+            <i class="fas fa-code"></i>
+            {{ .Site.Title }}
+        </a>
+        <div class="nav-links">
+            {{ $currentPage := . }}
+            {{ range .Site.Menus.main }}
+            <a href="{{ .URL }}" class="nav-link {{ if or ($currentPage.IsMenuCurrent "main" .) ($currentPage.HasMenuCurrent "main" .) }}active{{ end }}">{{ .Name }}</a>
+            {{ end }}
+            <div class="nav-icons">
+                <a href="/posts/#search-input" class="icon-btn" title="搜索" onclick="sessionStorage.setItem('focusSearch', 'true')">
+                    <i class="fas fa-search"></i>
+                </a>
+                <a href="{{ .Site.Params.github | default "#" | safeURL }}" class="icon-btn" title="GitHub">
+                    <i class="fab fa-github"></i>
+                </a>
+                <a href="/index.xml" class="icon-btn" title="RSS">
+                    <i class="fas fa-rss"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1 class="page-title">{{ .Title }}</h1>
+        <div class="page-description">{{ .Content }}</div>
+
+        {{ $pages := where .Site.RegularPages "Type" "posts" }}
+        {{ range $pages.GroupByDate "2006" }}
+        <div class="archive-year">
+            <h2 class="year-heading">{{ .Key }}</h2>
+            <ul class="archive-list">
+                {{ range .Pages.ByDate.Reverse }}
+                <li class="archive-item">
+                    <span class="archive-date">{{ .Date.Format "2006-01-02" }}</span>
+                    <span class="archive-title">
+                        <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+                    </span>
+                </li>
+                {{ end }}
+            </ul>
+        </div>
+        {{ end }}
+    </div>
+
+    <div class="footer">
+        <p>Powered by Hugo | {{ .Site.Title }} © {{ now.Format "2006" }}</p>
+    </div>
+</body>
+</html>

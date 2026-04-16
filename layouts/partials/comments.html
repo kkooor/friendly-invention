@@ -1,0 +1,50 @@
+{{ if and .Site.Params.giscus.repo .Site.Params.giscus.repoId .Site.Params.giscus.category .Site.Params.giscus.categoryId }}
+<div class="comments-section">
+  <h3 class="comments-title"><i class="fas fa-comments"></i> 评论</h3>
+  <div class="giscus"></div>
+  <script src="https://giscus.app/client.js"
+          data-repo="{{ .Site.Params.giscus.repo }}"
+          data-repo-id="{{ .Site.Params.giscus.repoId }}"
+          data-category="{{ .Site.Params.giscus.category }}"
+          data-category-id="{{ .Site.Params.giscus.categoryId }}"
+          data-mapping="pathname"
+          data-strict="0"
+          data-reactions-enabled="1"
+          data-emit-metadata="0"
+          data-input-position="{{ .Site.Params.giscus.inputPosition | default "top" }}"
+          data-theme="{{ .Site.Params.giscus.theme | default "light" }}"
+          data-lang="{{ .Site.Params.giscus.lang | default "zh-CN" }}"
+          data-loading="{{ .Site.Params.giscus.loading | default "lazy" }}"
+          crossorigin="anonymous"
+          async>
+  </script>
+</div>
+<style>
+  .comments-section {
+    margin-top: 60px;
+    padding-top: 30px;
+    border-top: 1px solid rgba(59,130,246,0.15);
+  }
+  .comments-title {
+    font-size: 1.5rem;
+    margin-bottom: 24px;
+    color: #0f172a;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .comments-title i {
+    color: #3b82f6;
+  }
+  /* 深色模式适配 */
+  [data-theme="dark"] .comments-title {
+    color: #e0e0ff;
+  }
+  [data-theme="dark"] .comments-title i {
+    color: #00f0ff;
+  }
+  [data-theme="dark"] .comments-section {
+    border-top-color: rgba(0,240,255,0.2);
+  }
+</style>
+{{ end }}

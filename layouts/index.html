@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ .Site.Title }}</title>
+    {{ partial "fonts.html" . }}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        /* 深邃渐变背景 + 微光粒子 (使用多重径向渐变模拟) */
+        body {
+            background: radial-gradient(circle at 20% 30%, #1a2a4a 0%, #0a0a14 70%);
+            position: relative;
+        }
+
+        /* 装饰性光点 (伪元素) */
+        body::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 80% 10%, rgba(100, 180, 255, 0.08) 0%, transparent 30%),
+                radial-gradient(circle at 10% 90%, rgba(180, 100, 255, 0.08) 0%, transparent 40%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Hero容器 */
+        .hero {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* 背景流动网格 (降低透明度，增加呼吸感) */
+        .background-flow {
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            z-index: 0;
+            background-image: 
+                linear-gradient(0deg, rgba(100, 180, 255, 0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(180, 140, 255, 0.04) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: backgroundFlow 12s linear infinite;
+            opacity: 0.8;
+        }
+
+        @keyframes backgroundFlow {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(100px, 100px); }
+        }
+
+        /* 网格容器 - 蛇形动画保留 */
+        .grid-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .grid-cell {
+            position: absolute;
+            border: 1px solid rgba(120, 180, 255, 0.08);
+            background: transparent;
+            transition: background-color 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .grid-cell.snake-head {
+            background: radial-gradient(circle at 30% 30%, #ffb0d0, #6080ff);
+            box-shadow: inset 0 0 40px rgba(255, 200, 255, 0.8), 
+                        0 0 60px rgba(80, 160, 255, 0.7),
+                        0 0 120px rgba(255, 120, 200, 0.5);
+            animation: snake-pulse 0.9s ease-in-out infinite;
+            z-index: 10;
+        }
+
+        .grid-cell.snake-body-0 {
+            background-color: rgba(130, 170, 255, 0.25);
+            box-shadow: inset 0 0 25px rgba(100, 200, 255, 0.5), 0 0 40px rgba(100, 180, 255, 0.3);
+            z-index: 9;
+        }
+        .grid-cell.snake-body-1 {
+            background-color: rgba(130, 170, 255, 0.18);
+            box-shadow: inset 0 0 18px rgba(100, 200, 255, 0.3);
+            z-index: 8;
+        }
+        .grid-cell.snake-body-2 {
+            background-color: rgba(130, 170, 255, 0.12);
+            box-shadow: inset 0 0 12px rgba(100, 200, 255, 0.2);
+            z-index: 7;
+        }
+        .grid-cell.snake-body-3 {
+            background-color: rgba(130, 170, 255, 0.06);
+            box-shadow: inset 0 0 8px rgba(100, 200, 255, 0.1);
+            z-index: 6;
+        }
+
+        .grid-cell.highlight {
+            background: radial-gradient(circle at 30% 30%, #a0ffd0, #40a0ff);
+            box-shadow: inset 0 0 50px rgba(160, 255, 200, 0.8), 
+                        0 0 80px rgba(80, 200, 255, 0.7),
+                        0 0 140px rgba(100, 255, 180, 0.5);
+            animation: highlight-pulse 1.2s ease-in-out infinite;
+            z-index: 10;
+        }
+
+        @keyframes snake-pulse {
+            0%, 100% { opacity: 0.9; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.02); }
+        }
+
+        @keyframes highlight-pulse {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.2); }
+        }
+
+        /* 中央内容区 */
+        .hero-content {
+            position: relative;
+            text-align: center;
+            z-index: 20;
+            animation: fadeInUp 1s ease-out;
+            padding: 20px;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 头像 - 增强光效和边框动画 */
+        .avatar {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid rgba(180, 220, 255, 0.6);
+            box-shadow: 0 0 60px rgba(80, 160, 255, 0.5),
+                        inset 0 0 20px rgba(255, 255, 255, 0.3);
+            animation: float 4s ease-in-out infinite, avatarGlow 3s ease-in-out infinite;
+            transition: transform 0.3s;
+        }
+
+        .avatar:hover {
+            transform: scale(1.02);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-12px); }
+        }
+
+        @keyframes avatarGlow {
+            0%, 100% { box-shadow: 0 0 50px rgba(80, 160, 255, 0.4), inset 0 0 20px rgba(255,255,255,0.2); }
+            50% { box-shadow: 0 0 80px rgba(140, 200, 255, 0.7), inset 0 0 30px rgba(255,255,255,0.4); }
+        }
+
+        /* 标题 */
+        .title {
+            margin-top: 30px;
+            font-size: 58px;
+            font-weight: 300;
+            letter-spacing: 4px;
+            color: #ffffff;
+            text-shadow: 0 0 30px rgba(100, 180, 255, 0.7), 0 4px 10px rgba(0,0,0,0.3);
+            animation: fadeInUp 0.8s ease-out 0.15s backwards;
+        }
+
+        /* 副标题 */
+        .subtitle {
+            color: #b0c8ff;
+            margin-top: 15px;
+            font-size: 18px;
+            letter-spacing: 3px;
+            font-weight: 300;
+            text-shadow: 0 0 15px rgba(100, 180, 255, 0.5);
+            animation: fadeInUp 0.8s ease-out 0.3s backwards;
+        }
+
+        /* 导航区域 - 玻璃态卡片 */
+        .nav-links {
+            margin-top: 70px;
+            display: flex;
+            gap: 40px;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 0.8s ease-out 0.5s backwards;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: #ccd6f0;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            cursor: pointer;
+            padding: 12px 24px;
+            border-radius: 60px;
+            background: rgba(20, 40, 70, 0.3);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(100, 180, 255, 0.2);
+            box-shadow: 0 8px 20px -8px rgba(0,0,0,0.4);
+            min-width: 110px;
+        }
+
+        .nav-item i {
+            font-size: 34px;
+            filter: drop-shadow(0 0 8px rgba(100, 180, 255, 0.3));
+            transition: all 0.3s;
+        }
+
+        .nav-item span {
+            font-size: 16px;
+            font-weight: 400;
+            letter-spacing: 1px;
+        }
+
+        .nav-item:hover {
+            background: rgba(60, 100, 170, 0.5);
+            border-color: rgba(180, 220, 255, 0.6);
+            box-shadow: 0 0 30px rgba(80, 160, 255, 0.5), 0 10px 25px -5px rgba(0,0,0,0.5);
+            transform: translateY(-6px) scale(1.02);
+            color: #ffffff;
+        }
+
+        .nav-item:hover i {
+            transform: scale(1.15);
+            filter: drop-shadow(0 0 20px rgba(180, 220, 255, 0.9));
+        }
+
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            .title {
+                font-size: 42px;
+            }
+            .subtitle {
+                font-size: 15px;
+            }
+            .nav-links {
+                gap: 20px;
+                margin-top: 50px;
+            }
+            .nav-item {
+                padding: 10px 16px;
+                min-width: 90px;
+            }
+            .nav-item i {
+                font-size: 28px;
+            }
+            .avatar {
+                width: 120px;
+                height: 120px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="hero">
+        <!-- 背景流动网格 -->
+        <div class="background-flow"></div>
+
+        <!-- 网格蛇形容器 -->
+        <div class="grid-container" id="gridContainer"></div>
+
+        <!-- 中央内容 -->
+        <div class="hero-content">
+            <img src="/images/avatar.webp" alt="Avatar" class="avatar">
+            <h1 class="title">{{ .Site.Title | default "kkorcicv" }}</h1>
+            <p class="subtitle">{{ .Site.Params.home.profile.subtitle | default "Struggle | Insist" }}</p>
+
+            <div class="nav-links">
+                <a href="/posts/" class="nav-item">
+                    <i class="fas fa-pen-fancy"></i>
+                    <span>Blog</span>
+                </a>
+                <a href="/about/" class="nav-item">
+                    <i class="fas fa-paper-plane"></i>
+                    <span>About</span>
+                </a>
+                <a href="/projects/" class="nav-item">
+                    <i class="fas fa-grip"></i>
+                    <span>Projects</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            let gridData = [];
+            let currentHighlightCell = null;
+            const cellSize = 45;  // 稍微调大，与背景更协调
+            const snakeLength = 10;
+            let snakeTrail = [];
+            let lastActiveCells = [];
+
+            function createGrid() {
+                const container = document.getElementById('gridContainer');
+                const heroHeight = window.innerHeight;
+                const heroWidth = window.innerWidth;
+
+                const rows = Math.ceil(heroHeight / cellSize) + 1;
+                const cols = Math.ceil(heroWidth / cellSize) + 1;
+
+                gridData = [];
+                container.innerHTML = '';
+
+                for (let i = 0; i < rows; i++) {
+                    for (let j = 0; j < cols; j++) {
+                        const cell = document.createElement('div');
+                        cell.className = 'grid-cell';
+                        cell.dataset.x = j;
+                        cell.dataset.y = i;
+                        cell.style.left = j * cellSize + 'px';
+                        cell.style.top = i * cellSize + 'px';
+                        cell.style.width = cellSize + 'px';
+                        cell.style.height = cellSize + 'px';
+                        container.appendChild(cell);
+                        gridData.push({ x: j, y: i, element: cell });
+                    }
+                }
+                highlightRandomCell();
+            }
+
+            function highlightRandomCell() {
+                if (currentHighlightCell) {
+                    currentHighlightCell.element.classList.remove('highlight');
+                }
+                if (gridData.length === 0) return;
+                const randomIndex = Math.floor(Math.random() * gridData.length);
+                currentHighlightCell = gridData[randomIndex];
+                currentHighlightCell.element.classList.add('highlight');
+            }
+
+            createGrid();
+            setInterval(highlightRandomCell, 3500);
+
+            document.addEventListener('mousemove', function(e) {
+                const cellX = Math.floor(e.clientX / cellSize);
+                const cellY = Math.floor(e.clientY / cellSize);
+
+                lastActiveCells.forEach(cell => {
+                    cell.classList.remove('snake-head', 'snake-body-0', 'snake-body-1', 'snake-body-2', 'snake-body-3');
+                });
+                lastActiveCells = [];
+
+                snakeTrail.unshift({ x: cellX, y: cellY });
+                if (snakeTrail.length > snakeLength) {
+                    snakeTrail.pop();
+                }
+
+                gridData.forEach(cellData => {
+                    const x = cellData.x;
+                    const y = cellData.y;
+                    if (cellData.element.classList.contains('highlight')) return;
+
+                    snakeTrail.forEach((segment, index) => {
+                        if (x === segment.x && y === segment.y) {
+                            if (index === 0) {
+                                cellData.element.classList.add('snake-head');
+                            } else if (index < snakeLength) {
+                                const fadeIndex = Math.min(index - 1, 3);
+                                cellData.element.classList.add(`snake-body-${fadeIndex}`);
+                            }
+                            lastActiveCells.push(cellData.element);
+                        }
+                    });
+                });
+            });
+
+            window.addEventListener('resize', function() {
+                createGrid();
+            });
+        })();
+    </script>
+
+</body>
+</html>

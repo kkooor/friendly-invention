@@ -1,0 +1,35 @@
+<div id="reading-progress" class="reading-progress"></div>
+<style>
+  .reading-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0%;
+    height: 4px;
+    background: linear-gradient(90deg, #3b82f6, #a855f7);
+    z-index: 1000;
+    transition: width 0.1s ease;
+    box-shadow: 0 0 10px rgba(59,130,246,0.5);
+  }
+  [data-theme="dark"] .reading-progress {
+    background: linear-gradient(90deg, #ff2a7a, #00f0ff);
+    box-shadow: 0 0 10px rgba(255,42,122,0.7);
+  }
+</style>
+<script>
+  (function() {
+    const progressBar = document.getElementById('reading-progress');
+    if (!progressBar) return;
+    
+    function updateProgress() {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const percent = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      progressBar.style.width = Math.min(percent, 100) + '%';
+    }
+    
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    window.addEventListener('resize', updateProgress);
+    updateProgress();
+  })();
+</script>

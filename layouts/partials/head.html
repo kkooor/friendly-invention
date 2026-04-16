@@ -1,0 +1,44 @@
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- 基础SEO标签 -->
+  <title>{{ if .Title }}{{ .Title }} - {{ .Site.Title }}{{ else }}{{ .Site.Title }}{{ end }}</title>
+  <meta name="author" content="{{ .Site.Params.author }}">
+  <meta name="keywords" content="{{ if .Params.keywords }}{{ .Params.keywords }}{{ else }}{{ .Site.Params.keywords }}{{ end }}">
+  <meta name="description" content="{{ if .Params.description }}{{ .Params.description }}{{ else }}{{ .Site.Params.description }}{{ end }}">
+  
+  <!-- OG标签（社交分享/搜索引擎优化） -->
+  <meta property="og:title" content="{{ if .Title }}{{ .Title }} - {{ .Site.Title }}{{ else }}{{ .Site.Title }}{{ end }}">
+  <meta property="og:description" content="{{ if .Params.description }}{{ .Params.description }}{{ else }}{{ .Site.Params.description }}{{ end }}">
+  <meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}">
+  <meta property="og:url" content="{{ .Permalink }}">
+  <meta property="og:image" content="{{ if .Params.cover }}{{ .Params.cover }}{{ else }}{{ .Site.Params.image }}{{ end }}">
+  <meta property="og:site_name" content="{{ .Site.Title }}">
+  
+  <!-- Twitter 卡片标签（可选） -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ if .Title }}{{ .Title }} - {{ .Site.Title }}{{ else }}{{ .Site.Title }}{{ end }}">
+  <meta name="twitter:description" content="{{ if .Params.description }}{{ .Params.description }}{{ else }}{{ .Site.Params.description }}{{ end }}">
+  <meta name="twitter:image" content="{{ if .Params.cover }}{{ .Params.cover }}{{ else }}{{ .Site.Params.image }}{{ end }}">
+  
+  <!-- 图片懒加载（全局生效） -->
+  <script>
+    // 兼容旧浏览器的图片懒加载
+    document.addEventListener("DOMContentLoaded", function() {
+      const images = document.querySelectorAll("img");
+      images.forEach(img => {
+        if (!img.hasAttribute("loading")) {
+          img.setAttribute("loading", "lazy");
+        }
+      });
+    });
+  </script>
+  
+  <!-- 引入样式（Hugo 管道压缩） -->
+  {{ $style := resources.Get "scss/main.scss" | default resources.Get "css/main.css" | toCSS | minify | fingerprint }}
+  <link rel="stylesheet" href="{{ $style.RelPermalink }}" integrity="{{ $style.Data.Integrity }}">
+  
+  <!-- 预加载核心字体/资源（可选，提升加载速度） -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+</head>

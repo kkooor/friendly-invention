@@ -1,0 +1,60 @@
+{{ if .TableOfContents }}
+<aside class="article-toc">
+  <div class="toc-container">
+    <div class="toc-title">
+      <i class="fas fa-list-ul"></i> 目录
+    </div>
+    <div class="toc-content">
+      {{ .TableOfContents }}
+    </div>
+  </div>
+</aside>
+{{ end }}
+<style>
+  .article-toc {
+    width: 260px;
+    flex-shrink: 0;
+  }
+  .toc-container {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
+    border-radius: 20px;
+    padding: 24px 20px;
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 8px 20px -8px rgba(0,0,0,0.05);
+    position: sticky;
+    top: 40px;
+  }
+  .toc-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #0f172a;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .toc-title i { color: #3b82f6; }
+  .toc-content nav > ul { list-style: none; padding-left: 0; }
+  .toc-content li { margin-bottom: 10px; }
+  .toc-content a {
+    color: #475569;
+    text-decoration: none;
+    font-size: 14px;
+    display: block;
+    padding: 6px 0 6px 16px;
+    border-left: 3px solid transparent;
+    transition: 0.2s;
+  }
+  .toc-content a:hover {
+    color: #3b82f6;
+    border-left-color: #93c5fd;
+    background: rgba(59,130,246,0.04);
+  }
+  .toc-content ul ul { padding-left: 16px; }
+  .toc-content ul ul a { font-size: 13px; padding-left: 28px; color: #64748b; }
+  @media (max-width: 768px) {
+    .article-toc { width: 100%; }
+    .toc-container { position: static; }
+  }
+</style>
