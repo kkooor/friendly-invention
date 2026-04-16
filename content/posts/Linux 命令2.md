@@ -1,7 +1,4 @@
-# Linux 常用命令笔记（完整版）
-
----
-title: "文章标题"
+title: "linux 基础命令2"
 date: 2026-04-16
 draft: false         
 categories: ["技术笔记"]
