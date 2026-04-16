@@ -1,14 +1,16 @@
 # Linux 常用命令笔记（完整版）
 
-\-\-\-
-title: \&\#34;Linux 常用命令笔记（完整版）\&\#34;
-date: 2026\-04\-16
-draft: false          \# 必须为 false 才会发布
-categories: \[\&\#34;技术笔记\&\#34;\]
-tags: \[\&\#34;Linux\&\#34;, \&\#34;命令行\&\#34;\]
-author: \&\#34;kkorcicv\&\#34;
+---
+title: "文章标题"
+date: 2026-04-16
+draft: false         
+categories: ["技术笔记"]
+tags: ["Linux", "命令行"]
+author: "kkorcicv"
 toc: true
-\-\-\-
+---
+
+这里是正文内容……
 
 本文整理 Linux 中高频使用的文件查找、内容过滤、统计、输出控制类命令，包含详细语法、选项说明、实用示例，适合日常查阅和入门学习。
 
