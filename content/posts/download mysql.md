@@ -1,3 +1,13 @@
+---
+title: "CentOS 7 安装 MySQL 5.7.37 完整教程"
+date: 2026-04-17
+draft: false          
+categories: ["技术笔记"]
+tags: ["Linux", "MySQL", "CentOS", "数据库安装"]
+author: "kkorcicv"
+toc: true
+---
+
 ```
 # CentOS 7 安装 MySQL 5.7.37 完整教程
 
