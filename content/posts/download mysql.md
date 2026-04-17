@@ -1,5 +1,5 @@
 ---
-title: "CentOS 7 安装 MySQL 5.7.37 完整教程"
+title: "how to download mysql in centos 7"
 date: 2026-04-17
 draft: false          
 categories: ["技术笔记"]
