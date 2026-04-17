@@ -1,13 +1,13 @@
-```
 ---
-title: "CentOS 7 部署 Tomcat 9 完整教程"
+title: "linux 部署tomact"
 date: 2026-04-17
-draft: false          
-categories: ["技术笔记"]
-tags: ["Linux", "Tomcat", "CentOS", "Java"]
+draft: false          # 必须为 false 才会发布
+categories: ["部署步骤"]
+tags: ["Linux", "tomact"]
 author: "kkorcicv"
 toc: true
 ---
+
 
 本文基于 CentOS 7 系统，全程实操验证，手把手带你完成 Tomcat 9 完整部署。教程覆盖**yum源修复、JDK环境配置、安装包下载校验、服务启停、开机自启、端口开放、项目部署**全流程，解决了CentOS 7官方源失效、安装包404、javac命令缺失、远程访问失败等所有新手常见坑，所有命令可直接复制使用，零基础也能一次成功。
 
