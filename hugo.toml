@@ -86,6 +86,10 @@ enableEmoji = true
   name = "About"
   url = "/about/"
   weight = 40
+  [[menu.main]]
+  name = "Series"
+  url = "/series/"
+  weight = 25
 
 # Markdown 渲染配置
 [markup]
@@ -105,4 +109,4 @@ enableEmoji = true
 [taxonomies]
   category = "categories"
   tag = "tags"
-  series = "series"
+   series = "series"
