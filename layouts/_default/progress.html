@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.LanguageCode | default "en" }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ .Title }} - {{ .Site.Title }}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg: linear-gradient(145deg, #f4f9ff 0%, #e3edf5 100%);
+            --card-bg: rgba(255, 255, 255, 0.75);
+            --text: #1e293b;
+            --text-secondary: #475569;
+            --accent: #3b82f6;
+            --border: rgba(59,130,246,0.15);
+        }
+        [data-theme="dark"] {
+            --bg: linear-gradient(145deg, #0b0e1a 0%, #1a0f2e 100%);
+            --card-bg: rgba(20, 28, 40, 0.8);
+            --text: #e0e0ff;
+            --text-secondary: #a0a8c0;
+            --accent: #ff2a7a;
+            --border: rgba(255,42,122,0.2);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1300px;
+            margin: 0 auto 60px;
+            padding: 0 20px;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: 600;
+            text-decoration: none;
+            color: var(--text);
+        }
+        .logo i { margin-right: 10px; color: var(--accent); }
+        .nav-links { display: flex; gap: 30px; }
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+        .nav-link:hover { color: var(--accent); }
+        .container { max-width: 1400px; margin: 0 auto; }
+        .page-header { margin-bottom: 40px; padding: 0 10px; }
+        .page-title { font-size: 2.8rem; font-weight: 300; margin-bottom: 15px; }
+        .overall-progress {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin: 20px 0 10px;
+        }
+        .progress-bar-bg {
+            flex: 1;
+            height: 12px;
+            background: rgba(128,128,128,0.2);
+            border-radius: 20px;
+            overflow: hidden;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--accent), #a855f7);
+            border-radius: 20px;
+            transition: width 0.3s;
+        }
+        .progress-text { font-weight: 600; color: var(--accent); }
+        .stages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        .stage-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border-radius: 24px;
+            padding: 24px;
+            border: 1px solid var(--border);
+            box-shadow: 0 8px 20px -6px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        .stage-card:hover { transform: translateY(-5px); }
+        .stage-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .stage-header i { font-size: 28px; color: var(--accent); }
+        .stage-header h2 { font-size: 1.4rem; font-weight: 600; }
+        .module-list { list-style: none; }
+        .module-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        .module-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--accent);
+        }
+        .module-item .module-name {
+            flex: 1;
+        }
+        .module-link {
+            color: var(--text-secondary);
+            font-size: 16px;
+            transition: color 0.2s;
+            margin-left: 8px;
+        }
+        .module-link:hover {
+            color: var(--accent);
+        }
+        .module-notes { margin-top: 10px; }
+        .module-notes textarea {
+            width: 100%;
+            padding: 12px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            background: rgba(0,0,0,0.05);
+            color: var(--text);
+            font-family: inherit;
+            resize: vertical;
+            min-height: 80px;
+        }
+        [data-theme="dark"] .module-notes textarea {
+            background: rgba(0,0,0,0.3);
+        }
+        .reset-btn { margin-top: 40px; text-align: right; }
+        .btn {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 10px 20px;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn:hover {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+        .footer { margin-top: 80px; text-align: center; color: var(--text-secondary); }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <a href="{{ .Site.BaseURL }}" class="logo">
+            <i class="fas fa-code"></i>
+            {{ .Site.Title }}
+        </a>
+        <div class="nav-links">
+            {{ range .Site.Menus.main }}
+            <a href="{{ .URL }}" class="nav-link">{{ .Name }}</a>
+            {{ end }}
+        </div>
+    </div>
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">{{ .Title }}</h1>
+            <div class="overall-progress">
+                <span>总体进度</span>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" id="overall-progress-fill" style="width:0%"></div>
+                </div>
+                <span class="progress-text" id="overall-progress-text">0%</span>
+            </div>
+        </div>
+
+        <div id="stages-container" class="stages-grid"></div>
+
+        <div class="reset-btn">
+            <button class="btn" id="reset-progress"><i class="fas fa-undo-alt"></i> 重置所有进度</button>
+        </div>
+    </div>
+    <div class="footer">
+        <p>{{ .Site.Title }} · 学习记录自动保存于本地</p>
+    </div>
+
+    <script>
+        // ---------- 数据结构（包含资源链接）----------
+        const roadmapData = [
+            {
+                stage: "阶段1：运维基础",
+                icon: "fa-terminal",
+                modules: [
+                    { name: "Linux操作系统基础", link: "https://www.kernel.org/doc/html/latest/" },
+                    { name: "韩顺平Linux教程", link: "https://www.bilibili.com/video/BV1Sv411r7vd" },
+                    { name: "Linux命令大全", link: "https://man7.org/linux/man-pages/" },
+                    { name: "Linux环境", link: "" },
+                    { name: "用户管理", link: "" },
+                    { name: "文件管理", link: "" },
+                    { name: "磁盘管理", link: "" },
+                    { name: "进程管理", link: "" },
+                    { name: "网络管理", link: "" },
+                    { name: "系统管理", link: "" },
+                    { name: "软件管理", link: "" },
+                    { name: "Linux内核", link: "https://www.kernel.org/" }
+                ]
+            },
+            {
+                stage: "阶段2：运维进阶",
+                icon: "fa-chart-line",
+                modules: [
+                    { name: "Shell脚本编程", link: "https://www.shellscript.sh/" },
+                    { name: "网络服务搭建 (DNS, DHCP, Nginx等)", link: "" },
+                    { name: "监控与告警 (Prometheus, Grafana)", link: "https://prometheus.io/docs/" },
+                    { name: "日志管理 (ELK Stack)", link: "https://www.elastic.co/guide/index.html" },
+                    { name: "配置管理 (Ansible, Puppet)", link: "https://docs.ansible.com/" }
+                ]
+            },
+            {
+                stage: "阶段3：拓展边界-中间件",
+                icon: "fa-cubes",
+                modules: [
+                    { name: "消息队列 (RabbitMQ, Kafka)", link: "https://kafka.apache.org/documentation/" },
+                    { name: "缓存技术 (Redis, Memcached)", link: "https://redis.io/documentation" },
+                    { name: "Web服务器 (Nginx, Apache)", link: "https://nginx.org/en/docs/" },
+                    { name: "数据库 (MySQL, PostgreSQL)", link: "https://dev.mysql.com/doc/" }
+                ]
+            },
+            {
+                stage: "阶段5：云计算",
+                icon: "fa-cloud",
+                modules: [
+                    { name: "AWS/GCP/Azure 基础", link: "https://aws.amazon.com/cn/training/" },
+                    { name: "Terraform 基础设施即代码", link: "https://developer.hashicorp.com/terraform/docs" },
+                    { name: "Docker 容器化", link: "https://docs.docker.com/" },
+                    { name: "Kubernetes 编排", link: "https://kubernetes.io/docs/home/" },
+                    { name: "服务网格 (Istio)", link: "https://istio.io/latest/docs/" }
+                ]
+            },
+            {
+                stage: "阶段6：运维开发",
+                icon: "fa-code",
+                modules: [
+                    { name: "Python/Go 开发基础", link: "https://docs.python.org/3/" },
+                    { name: "REST API 设计", link: "" },
+                    { name: "CI/CD 流水线 (Jenkins, GitLab CI)", link: "https://docs.gitlab.com/ee/ci/" },
+                    { name: "GitOps (ArgoCD)", link: "https://argo-cd.readthedocs.io/" }
+                ]
+            },
+            {
+                stage: "阶段7：求职",
+                icon: "fa-briefcase",
+                modules: [
+                    { name: "简历优化", link: "" },
+                    { name: "模拟面试", link: "" },
+                    { name: "算法刷题", link: "https://leetcode.cn/" },
+                    { name: "项目经验整理", link: "" }
+                ]
+            },
+            {
+                stage: "阶段8：持续学习",
+                icon: "fa-book-open",
+                modules: [
+                    { name: "技术博客撰写", link: "" },
+                    { name: "开源项目贡献", link: "https://github.com/explore" },
+                    { name: "参加技术大会", link: "" },
+                    { name: "跟进新技术趋势", link: "" }
+                ]
+            },
+            {
+                stage: "核心技能点",
+                icon: "fa-bolt",
+                modules: [
+                    { name: "计算机网络基础", link: "https://www.cloudflare.com/learning/" },
+                    { name: "操作系统原理", link: "" },
+                    { name: "数据结构与算法", link: "https://www.geeksforgeeks.org/" },
+                    { name: "版本控制 (Git)", link: "https://git-scm.com/doc" }
+                ]
+            },
+            {
+                stage: "人工智能功能",
+                icon: "fa-robot",
+                modules: [
+                    { name: "AI 辅助运维 (AIOps)", link: "" },
+                    { name: "机器学习基础", link: "https://developers.google.com/machine-learning" },
+                    { name: "LLM 应用开发", link: "" }
+                ]
+            }
+        ];
+
+        const STORAGE_KEY = 'devops_roadmap_progress';
+        let learningData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+
+        function renderStages() {
+            const container = document.getElementById('stages-container');
+            let totalModules = 0;
+            let completedModules = 0;
+
+            container.innerHTML = roadmapData.map(stage => {
+                let stageHtml = `
+                    <div class="stage-card">
+                        <div class="stage-header">
+                            <i class="fas ${stage.icon}"></i>
+                            <h2>${stage.stage}</h2>
+                        </div>
+                        <ul class="module-list">
+                `;
+
+                stage.modules.forEach((module, idx) => {
+                    const moduleKey = `${stage.stage}-${module.name}`;
+                    const isChecked = learningData[moduleKey]?.completed || false;
+                    const notes = learningData[moduleKey]?.notes || '';
+                    if (isChecked) completedModules++;
+                    totalModules++;
+
+                    const linkHtml = module.link ? 
+                        `<a href="${module.link}" target="_blank" rel="noopener" class="module-link" title="打开资源"><i class="fas fa-external-link-alt"></i></a>` : '';
+
+                    stageHtml += `
+                        <li class="module-item">
+                            <input type="checkbox" data-module-key="${moduleKey}" ${isChecked ? 'checked' : ''}>
+                            <span class="module-name">${module.name}</span>
+                            ${linkHtml}
+                        </li>
+                        <li class="module-notes">
+                            <textarea placeholder="学习进度/记录笔记 ..." data-module-key="${moduleKey}">${notes}</textarea>
+                        </li>
+                    `;
+                });
+
+                stageHtml += `</ul></div>`;
+                return stageHtml;
+            }).join('');
+
+            attachEvents();
+            updateOverallProgress(completedModules, totalModules);
+        }
+
+        function updateOverallProgress(completed, total) {
+            const percent = total === 0 ? 0 : Math.round((completed / total) * 100);
+            document.getElementById('overall-progress-fill').style.width = percent + '%';
+            document.getElementById('overall-progress-text').innerText = percent + '%';
+        }
+
+        function saveAndUpdate() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(learningData));
+            let total = 0, completed = 0;
+            roadmapData.forEach(stage => {
+                stage.modules.forEach(module => {
+                    const key = `${stage.stage}-${module.name}`;
+                    total++;
+                    if (learningData[key]?.completed) completed++;
+                });
+            });
+            updateOverallProgress(completed, total);
+        }
+
+        function attachEvents() {
+            document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                cb.addEventListener('change', (e) => {
+                    const key = e.target.dataset.moduleKey;
+                    if (!learningData[key]) learningData[key] = { completed: false, notes: '' };
+                    learningData[key].completed = e.target.checked;
+                    saveAndUpdate();
+                });
+            });
+
+            document.querySelectorAll('textarea').forEach(ta => {
+                ta.addEventListener('input', (e) => {
+                    const key = e.target.dataset.moduleKey;
+                    if (!learningData[key]) learningData[key] = { completed: false, notes: '' };
+                    learningData[key].notes = e.target.value;
+                    saveAndUpdate();
+                });
+            });
+        }
+
+        document.getElementById('reset-progress').addEventListener('click', () => {
+            if (confirm('确定要重置所有学习进度和笔记吗？')) {
+                learningData = {};
+                localStorage.removeItem(STORAGE_KEY);
+                renderStages();
+            }
+        });
+
+        renderStages();
+    </script>
+</body>
+</html>
